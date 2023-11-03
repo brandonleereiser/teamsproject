@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Team Distribution</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>Team Distribution</h1>
+    <p>Enter a list of names separated by commas:</p>
+    <input type="text" id="namesInput">
+    <p>Enter the number of teams (2 to 5):</p>
+    <input type="number" id="numTeams" min="2" max="5" value="2">
+    <button onclick="distributeTeams()">Distribute Teams</button>
+    
+    <div id="teamContainer">
+        <!-- Teams will be displayed here -->
+    </div>
+
+    <script>
+        function distributeTeams() {
+            const namesInput = document.getElementById('namesInput').value;
+            const names = namesInput.split(',').map(name => name.trim());
+            const numNames = names.length;
+            const numTeams = parseInt(document.getElementById('numTeams').value);
+            
+            if (numNames < 2) {
+                alert('Please enter at least two names.');
+                return;
+            }
+
+            if (numTeams < 2 || numTeams > 5) {
+                alert('Please enter a valid number of teams (2 to 5).');
+                return;
+            }
+
+            if (numNames < numTeams) {
+                alert('There are more teams than names. Please enter more names.');
+                return;
+            }
+
+            const teams = new Array(numTeams);
+
+            for (let i = 0; i < numTeams; i++) {
+                teams[i] = [];
+            }
+
+            let currentIndex = 0;
+            while (names.length > 0) {
+                teams[currentIndex].push(names.pop());
+                currentIndex = (currentIndex + 1) % numTeams;
+            }
+
+            displayTeams(teams);
+        }
+
+        function displayTeams(teams) {
+            const teamContainer = document.getElementById('teamContainer');
+            teamContainer.innerHTML = '';
+
+            teams.forEach((team, index) => {
+                const teamDiv = document.createElement('div');
+                teamDiv.className = 'team';
+                teamDiv.innerHTML = `<h2>Team ${index + 1}:</h2><ul></ul>`;
+                
+                const teamList = teamDiv.querySelector('ul');
+                
+                team.forEach(name => {
+                    const li = document.createElement('li');
+                    li.textContent = name;
+                    teamList.appendChild(li);
+                });
+
+                teamContainer.appendChild(teamDiv);
+            });
+        }
+    </script>
+</body>
+</html>
+
+

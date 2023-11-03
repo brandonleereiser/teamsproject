@@ -1,0 +1,80 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    text-decoration: underline;
+}
+
+p {
+    color: #444;
+}
+
+input[type="text"], input[type="number"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #ff5733; 
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ff8833;
+}
+
+#teamContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.team {
+    width: 30%;
+    padding: 10px;
+    margin: 10px;
+    background-color: #ffd700;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #999;
+}
+
+.team h2 {
+    color: #333;
+}
+
+.team ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.team li {
+    margin: 5px 0;
+    color: #444;
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.team {
+    animation: slideIn 0.5s ease-in-out;
+}
