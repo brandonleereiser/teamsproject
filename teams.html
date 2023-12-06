@@ -1,30 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Distribution</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
+    <div id="toggleContainer">
+        <label class="switch">
+            <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+            <span class="slider"></span>
+        </label>
+    </div>
+
     <h1>Team Distribution</h1>
-    <p>Enter a list of names separated by commas:</p>
-    <input type="text" id="namesInput">
-    <p>Enter the number of teams (2 to 5):</p>
-    <input type="number" id="numTeams" min="2" max="5" value="2">
-    <button onclick="distributeTeams()">Distribute Teams</button>
     
+    <div id="controls">
+        <label for="savedGroups">Select a saved group:</label>
+        <select id="savedGroups" onchange="selectSavedGroup()">
+            <option value="">Select a saved group</option>
+        </select>
+
+        <button id="addNewGroupButton" onclick="addNewGroup()">Add New Group</button>
+        <button id="clearSavedGroupsButton" onclick="clearSavedGroups()">Clear Saved Groups</button>
+
+        <p>Enter the number of teams (2 to 5):</p>
+        <input type="number" id="numTeams" min="2" max="5" value="2">
+
+        <div id="addNamesContainer">
+            <input type="text" id="addNamesInput" placeholder="Enter names for distribution">
+            <button id="distributeButton" onclick="distributeTeams()">Distribute Teams</button>
+        </div>
+    </div>
+
     <div id="teamContainer">
         <!-- Teams will be displayed here -->
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedGroup();
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const isDarkMode = localStorage.getItem('darkMode') === 'enabled';
+            darkModeToggle.checked = isDarkMode;
+            toggleDarkMode();
+        });
+
         function distributeTeams() {
-            const namesInput = document.getElementById('namesInput').value;
+            const namesInput = document.getElementById('addNamesInput').value;
             const names = namesInput.split(',').map(name => name.trim());
-            const numNames = names.length;
             const numTeams = parseInt(document.getElementById('numTeams').value);
-            
-            if (numNames < 2) {
-                alert('Please enter at least two names.');
+
+            if (names.length < 2) {
+                alert('Please enter at least two names for distribution.');
                 return;
             }
 
@@ -33,7 +62,7 @@
                 return;
             }
 
-            if (numNames < numTeams) {
+            if (names.length < numTeams) {
                 alert('There are more teams than names. Please enter more names.');
                 return;
             }
@@ -73,8 +102,63 @@
                 teamContainer.appendChild(teamDiv);
             });
         }
+
+        function loadSavedGroup() {
+            const savedGroupsSelect = document.getElementById('savedGroups');
+
+            // Load saved groups from local storage
+            const savedGroups = JSON.parse(localStorage.getItem('permanentSavedGroups')) || [];
+
+            // Populate the dropdown with saved groups
+            savedGroupsSelect.innerHTML = '<option value="">Select a saved group</option>';
+            savedGroups.forEach((group, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `Group ${index + 1}`;
+                savedGroupsSelect.appendChild(option);
+            });
+        }
+
+        function addNewGroup() {
+            const namesInput = prompt('Enter names for the new group (comma-separated):');
+            if (namesInput !== null) {
+                const names = namesInput.split(',').map(name => name.trim());
+
+                if (names.length > 0) {
+                    const savedGroups = JSON.parse(localStorage.getItem('permanentSavedGroups')) || [];
+                    savedGroups.push(names);
+                    localStorage.setItem('permanentSavedGroups', JSON.stringify(savedGroups));
+
+                    // Reload the saved groups dropdown
+                    loadSavedGroup();
+                } else {
+                    alert('Please enter names before adding the group.');
+                }
+            }
+        }
+
+        function clearSavedGroups() {
+            localStorage.removeItem('permanentSavedGroups');
+            loadSavedGroup(); // Reload the saved groups dropdown
+        }
+
+        function selectSavedGroup() {
+            // This function can remain the same
+        }
+
+        function toggleDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const isDarkMode = darkModeToggle.checked;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            document.querySelectorAll('.team').forEach(team => {
+                team.classList.toggle('dark-mode', isDarkMode);
+            });
+            document.querySelectorAll('button, input, select').forEach(element => {
+                element.classList.toggle('dark-mode', isDarkMode);
+            });
+            // Store the user's preference for future visits
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        }
     </script>
 </body>
 </html>
-
-
