@@ -48,12 +48,21 @@
         });
 
         function distributeTeams() {
-            const namesInput = document.getElementById('addNamesInput').value;
-            const names = namesInput.split(',').map(name => name.trim());
+            const savedGroupsSelect = document.getElementById('savedGroups');
+            const selectedGroupIndex = savedGroupsSelect.value;
+
+            if (selectedGroupIndex === "") {
+                alert('Please select a saved group.');
+                return;
+            }
+
+            const savedGroups = JSON.parse(localStorage.getItem('permanentSavedGroups')) || [];
+            const selectedGroup = savedGroups[selectedGroupIndex];
+
             const numTeams = parseInt(document.getElementById('numTeams').value);
 
-            if (names.length < 2) {
-                alert('Please enter at least two names for distribution.');
+            if (selectedGroup.names.length < 2) {
+                alert('The selected group must contain at least two names for distribution.');
                 return;
             }
 
@@ -62,21 +71,22 @@
                 return;
             }
 
-            if (names.length < numTeams) {
-                alert('There are more teams than names. Please enter more names.');
+            if (selectedGroup.names.length < numTeams) {
+                alert('There are more teams than names in the selected group. Please enter more names.');
                 return;
             }
 
-            const teams = new Array(numTeams);
-
-            for (let i = 0; i < numTeams; i++) {
-                teams[i] = [];
+            const shuffledNames = [...selectedGroup.names];
+            for (let i = shuffledNames.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledNames[i], shuffledNames[j]] = [shuffledNames[j], shuffledNames[i]];
             }
 
-            let currentIndex = 0;
-            while (names.length > 0) {
-                teams[currentIndex].push(names.pop());
-                currentIndex = (currentIndex + 1) % numTeams;
+            const teams = new Array(numTeams).fill(null).map(() => []);
+
+            for (let i = 0; i < shuffledNames.length; i++) {
+                const teamIndex = i % numTeams;
+                teams[teamIndex].push(shuffledNames[i]);
             }
 
             displayTeams(teams);
@@ -114,25 +124,28 @@
             savedGroups.forEach((group, index) => {
                 const option = document.createElement('option');
                 option.value = index;
-                option.textContent = `Group ${index + 1}`;
+                option.textContent = group.name;
                 savedGroupsSelect.appendChild(option);
             });
         }
 
         function addNewGroup() {
-            const namesInput = prompt('Enter names for the new group (comma-separated):');
-            if (namesInput !== null) {
-                const names = namesInput.split(',').map(name => name.trim());
+            const groupName = prompt('Enter a name for the new group:');
+            if (groupName !== null) {
+                const namesInput = prompt(`Enter names for group '${groupName}' (comma-separated):`);
+                if (namesInput !== null) {
+                    const names = namesInput.split(',').map(name => name.trim());
 
-                if (names.length > 0) {
-                    const savedGroups = JSON.parse(localStorage.getItem('permanentSavedGroups')) || [];
-                    savedGroups.push(names);
-                    localStorage.setItem('permanentSavedGroups', JSON.stringify(savedGroups));
+                    if (names.length > 0) {
+                        const savedGroups = JSON.parse(localStorage.getItem('permanentSavedGroups')) || [];
+                        savedGroups.push({ name: groupName, names: names });
+                        localStorage.setItem('permanentSavedGroups', JSON.stringify(savedGroups));
 
-                    // Reload the saved groups dropdown
-                    loadSavedGroup();
-                } else {
-                    alert('Please enter names before adding the group.');
+                        // Reload the saved groups dropdown
+                        loadSavedGroup();
+                    } else {
+                        alert('Please enter names before adding the group.');
+                    }
                 }
             }
         }
@@ -143,7 +156,7 @@
         }
 
         function selectSavedGroup() {
-            // This function can remain the same
+            // This function can remain the same if no additional behavior is needed
         }
 
         function toggleDarkMode() {
