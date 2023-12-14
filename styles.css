@@ -1,22 +1,25 @@
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f8f9fa;
+    color: #343a40;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.dark-mode {
+    background-color: #333;
+    color: #fff;
+}
+
 h1 {
-    color: #008080;
     text-align: center;
+    color: #343a40;
 }
 
 #toggleContainer {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    z-index: 999;
+    text-align: right;
+    margin: 20px;
 }
 
 .switch {
@@ -40,8 +43,8 @@ h1 {
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    transition: 0.4s;
     border-radius: 34px;
+    transition: background-color 0.4s ease-in-out;
 }
 
 .slider:before {
@@ -51,17 +54,13 @@ h1 {
     width: 26px;
     left: 4px;
     bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
+    background-color: #fff;
     border-radius: 50%;
+    transition: transform 0.3s ease-in-out;
 }
 
 input:checked + .slider {
-    background-color: #2196F3;
-}
-
-input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    background-color: #007bff;
 }
 
 input:checked + .slider:before {
@@ -69,71 +68,65 @@ input:checked + .slider:before {
 }
 
 #controls {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
     margin: 20px auto;
     padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     text-align: center;
-    max-width: 600px;
-    transition: background-color 0.3s ease;
-}
-
-select, input, button {
-    margin: 10px;
-    padding: 8px;
-    font-size: 14px;
 }
 
 button {
-    cursor: pointer;
-    background-color: #008080;
+    background-color: #007bff;
     color: #fff;
-    border: none;
-    border-radius: 5px;
     padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 10px;
     transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #006666;
+    background-color: #0056b3;
 }
 
 #teamContainer {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
 .team {
+    width: 300px;
+    margin: 20px;
+    padding: 20px;
     background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin: 10px;
-    padding: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
 }
 
-.dark-mode {
+.team.dark-mode {
     background-color: #333;
-    color: #fff;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
 }
 
-.dark-mode #toggleContainer {
-    color: #fff;
+.team h2 {
+    color: #343a40;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
 }
 
-.dark-mode #controls {
-    background-color: #444;
+ul {
+    list-style-type: none;
+    padding: 0;
 }
 
-.dark-mode select, .dark-mode input, .dark-mode button {
-    background-color: #555;
-    color: #fff;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.dark-mode button:hover {
-    background-color: #444;
+li {
+    margin: 10px 0;
+    color: #6c757d;
+    font-size: 1.2rem;
 }
